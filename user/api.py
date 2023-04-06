@@ -9,6 +9,9 @@ from lib.sms import check_vcode
 
 from user.models import User,Profile
 from user.forms import ProfileForm
+from user.logic import sava_upload_file,upload_avatar_to_qiniu
+from worker import call_by_worker
+
 def get_verify_code(request):
     '''手机注册'''
 
@@ -70,4 +73,8 @@ def modify_profile(request):
 
 def upload_avatar(request):
     '''头像上传'''
-    pass
+    avatar = request.FILES.get('avatar')
+    filepath,filename = sava_upload_file(request.user, avatar)
+    upload_avatar_to_qiniu(request.user,filepath,filename)
+    return render_json(None)
+

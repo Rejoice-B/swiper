@@ -24,5 +24,5 @@ urlpatterns = [
     path('api/user/del/', user_api.delectUser),
     path('api/user/profile/show/', user_api.show_profile),
     path('api/user/profile/modify/', user_api.modify_profile),
-    # url(r'^api/uer/avatar/upload', user_api.upload_avatar),
+    path('api/user/avatar/upload/', user_api.upload_avatar),
 ]

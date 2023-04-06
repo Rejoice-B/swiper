@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']#允许哪些网站来访问，*表示所有
 
-
+#SETTINGS.CACHES = {'default':{'BACKEND':'django.core.cache.backends.locmem.LocMemCache'}}
 # Application definition
 
 INSTALLED_APPS = [
@@ -117,3 +117,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+MEDIA_ROOT = 'medias'
