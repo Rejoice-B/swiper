@@ -17,13 +17,23 @@ class AuthMiddleware(MiddlewareMixin):
         # 用户登录验证
         uid = request.session.get('uid')
         if uid is None:
-            return render_json(None,errors.LOGIN_REQUIRE)
+            return render_json(None,errors.LoginRequire.code)
         else:
             try:
                 user = User.objects.get(id=uid)
             except User.DoesNotExist:
-                return render_json(None,errors.USER_NOT_EXIST)
+                return render_json(None,errors.UserNotExist.code)
             else:
                 # 将user 对象添加到request
                 request.user = user
 
+class LogicErrorMiddleware(MiddlewareMixin):
+    def process_exception(self,request,exception):
+        '''异常处理'''
+        if isinstance(exception, errors.LogicError): # 判断抛出的异常类型是否是errors.LogicError,这里的exception是异常产生的一个实例
+            return render_json(None,exception.code) # 处理逻辑错误
+        # else:
+        #     #处理程序错误
+        #     error_info = format_exception(*exc_info())
+        #     err_log.error(''.join(error_info)) # 将异常信息输出到错误日志
+        #     return render_json(error=errors.InternalError) # 程序错误统一用 InternalError

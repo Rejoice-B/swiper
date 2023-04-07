@@ -14,10 +14,9 @@ from worker import call_by_worker
 
 def get_verify_code(request):
     '''手机注册'''
-
     phonenum = request.GET.get('phonenum')
-    send_verify_code(phonenum)
-    return render_json(None)
+    res = send_verify_code(phonenum)
+    return render_json(res)
 
 
 def login(request):
@@ -29,11 +28,10 @@ def login(request):
     if not check_vcode(phonenum, vcode):#检查验证码
         user, created = User.objects.get_or_create(phonenum=phonenum)
         request.session['uid'] = user.id
-        print(phonenum,vcode)
-
+        # print(phonenum,vcode)
         return render_json(user.to_dict())
     else:
-        return render_json(None, errors.VCODE_ERROR)
+        raise errors.VcodeError
 
 def loginText(request):
     '''取数据测试'''
@@ -49,8 +47,8 @@ def loginText(request):
 
 def delectUser(request):
     """删除某一条记录"""
-    user = User.objects.filter(nickname="").delete()
-    return HttpResponse(user.index())
+    User.objects.filter(nickname="").delete()
+    return render_json('ok')
 
 def get_profile(request):
     '''获取个人资料'''
@@ -69,7 +67,7 @@ def modify_profile(request):
         profile.save()
         return render_json(profile.to_dict())
     else:
-        return render_json(form.errors,errors.PROFILE_ERROR)
+        raise errors.ProfileError
 
 def upload_avatar(request):
     '''头像上传'''

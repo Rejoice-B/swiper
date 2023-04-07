@@ -16,7 +16,7 @@ Including another URLconf
 #from django.contrib import admin
 from django.urls import path
 from user import api as user_api
-
+from social import api as social_api
 urlpatterns = [
     path('api/user/vcode/', user_api.get_verify_code),
     path('api/user/login/', user_api.login),
@@ -25,4 +25,11 @@ urlpatterns = [
     path('api/user/profile/show/', user_api.show_profile),
     path('api/user/profile/modify/', user_api.modify_profile),
     path('api/user/avatar/upload/', user_api.upload_avatar),
+
+    path('api/social_api/get_rcmd_users/', social_api.get_rcmd_users),
+    path('api/social_api/like/', social_api.like),
+    path('api/social_api/superlike/', social_api.superlike),
+    path('api/social_api/dislike/', social_api.dislike),
+    path('api/social_api/rewind/', social_api.rewind),
+    path('api/social_api/show_liked_me/', social_api.show_liked_me),
 ]

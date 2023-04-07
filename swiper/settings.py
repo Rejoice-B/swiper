@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']#允许哪些网站来访问，*表示所有
 
-#SETTINGS.CACHES = {'default':{'BACKEND':'django.core.cache.backends.locmem.LocMemCache'}}
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'user',
+    'social',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +44,7 @@ MIDDLEWARE = [
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'common.middleware.AuthMiddleware',
+    'common.middleware.LogicErrorMiddleware',
 ]
 
 ROOT_URLCONF = 'swiper.urls'
@@ -63,6 +64,14 @@ TEMPLATES = [#模板
 ]
 
 WSGI_APPLICATION = 'swiper.wsgi.application'
+
+#缓存配置
+CACHES = {
+    'default': {
+        'BACKEND':'django.core.cache.backends.locmem.LocMemCache'
+    }
+}
+
 
 
 # Database
