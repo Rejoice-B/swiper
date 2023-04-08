@@ -32,4 +32,6 @@ urlpatterns = [
     path('api/social_api/dislike/', social_api.dislike),
     path('api/social_api/rewind/', social_api.rewind),
     path('api/social_api/show_liked_me/', social_api.show_liked_me),
+    path('api/social_api/friends/', social_api.get_friends),
+
 ]

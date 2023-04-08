@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.db.models import Q
 # Create your models here.
 
 class Swiped(models.Model):
@@ -14,19 +14,22 @@ class Swiped(models.Model):
     flag = models.CharField(max_length=10, choices=FLAGS)
     dtime = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        get_latest_by = 'dtime'
+
     @classmethod
     def like(cls,uid,sid):
-        obj = cls.objects.create(uid=uid,sid=sid,flage='like')
+        obj = cls.objects.create(uid=uid,sid=sid,flag='like')
         return obj
 
     @classmethod
     def superlike(cls,uid,sid):
-        obj = cls.objects.create(uid=uid,sid=sid,flage='superlike')
+        obj = cls.objects.create(uid=uid,sid=sid,flag='superlike')
         return obj
 
     @classmethod
     def dislike(cls,uid,sid):
-        obj = cls.objects.create(uid=uid,sid=sid,flage='dislike')
+        obj = cls.objects.create(uid=uid,sid=sid,flag='dislike')
         return obj
 
     # @classmethod
@@ -60,6 +63,19 @@ class Friend(models.Model):
         '''是否存在好友关系'''
         uid1, uid2 = sorted([uid1, uid2])  # 排序为了防止重复的喜欢数据
         return cls.objects.filter(uid1=uid1, uid2=uid2).exists() # 两人是否存在好友关系
+
+    @classmethod
+    def friend_id_list(cls,uid):
+        '''获取用户所有的好友的uid列表'''
+        #查询用户的好友关系
+        condition = Q(uid1=uid) | Q(uid2=uid)
+        relations = cls.objects.filter(condition)
+        #筛选好友的uid
+        id_list = []
+        for relation in relations:
+            friend_id = relation.uid2 if relation.uid1 == uid else relation.uid1
+            id_list.append(friend_id)
+        return id_list
 
     @classmethod
     def break_off(cls,uid1,uid2):

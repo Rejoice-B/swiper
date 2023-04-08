@@ -33,7 +33,7 @@ def superlike_someone(user,sid):
 def rewind(user):
     '''反悔'''
     # 先去除最后一次滑动记录
-    swiped = Swiped.objects.filter(uid=uid).latest()
+    swiped = Swiped.objects.filter(uid=user.id).latest()
     # 删除好友关系
     if swiped.flag in ['superlike','like']:
         Friend.break_off(user.id,swiper.sid) # 如果有好友关系就删除，否则不操作

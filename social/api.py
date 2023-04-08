@@ -18,19 +18,19 @@ def get_rcmd_users(request):
 def like(request):
     '''喜欢'''
     sid = int(request.POST.get('sid'))
-    is_matched = logic.like_someone(user,sid) # 检查两个人是否已经完成了匹配
+    is_matched = logic.like_someone(request.user,sid) # 检查两个人是否已经完成了匹配
     return render_json({'is_matched':is_matched})
 
 def superlike(request):
     '''超级喜欢'''
     sid = int(request.POST.get('sid'))
-    is_matched = logic.lsuperike_someone(user,sid) # 检查两个人是否已经完成了匹配
+    is_matched = logic.lsuperike_someone(request.user,sid) # 检查两个人是否已经完成了匹配
     return render_json({'is_matched':is_matched})
 
 def dislike(request):
     '''不喜欢'''
     sid = int(request.POST.get('sid'))
-    Swiped.dislike(user.id,sid)
+    Swiped.dislike(request.user.id,sid)
     return render_json(None)
 
 def rewind(request):
@@ -42,4 +42,8 @@ def show_liked_me(request):
     '''查看喜欢过我的人'''
     users = logic.user_liked_me(request.user)
     result = [u.to_dict() for u in users]
+    return render_json(result)
+
+def get_friends(request):
+    result = [frd.to_dict() for frd in request.user.friends()] # 取出用户所有的friends找到的对象
     return render_json(result)

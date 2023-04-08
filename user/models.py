@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 # Create your models here.
+from social.models import Friend
 
 class User(models.Model):
     '''用户数据模型'''
@@ -21,6 +22,10 @@ class User(models.Model):
         # return (today-birth_date).days // 365
         times = today - birth_date
         return times.days // 365
+
+    def friends(self):
+        friend_id_list = Friend.friend_id_list(self.id)
+        return User.objects.filter(id__in=friend_id_list)
 
     def to_dict(self):
         return {
