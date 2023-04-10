@@ -2,6 +2,8 @@ from django.db import models
 import datetime
 # Create your models here.
 from social.models import Friend
+from vip.models import Vip
+#from lib.orm import ModelMixin
 
 class User(models.Model):
     '''用户数据模型'''
@@ -14,6 +16,8 @@ class User(models.Model):
     birth_day = models.IntegerField(default=1, verbose_name='出生日')
     avatar=models.CharField(max_length=256, verbose_name='个人形象')
     location=models.CharField(max_length=32, verbose_name='常居地')
+
+    vip_id = models.IntegerField(default=1, verbose_name='Vip ID')
 
     @property
     def age(self):
@@ -36,7 +40,7 @@ class User(models.Model):
             'sex': self.sex,
             'avatar':self.avatar,
             'location': self.location,
-
+            'vip_id': self.vip_id,
         }
 
     @property
@@ -46,8 +50,14 @@ class User(models.Model):
             self._profile,_ = Profile.objects.get_or_create(id=self.id)#直接把结果放到对象
             #self._profile=_profile#把_profile变成一个属性
         return self._profile
-'''from user.models import User,Profile'''
-'''ll=User.objects.create(nickname='LLHH',phonenum='199990000000')'''
+
+    @property
+    def vip(self):  # 构建对Vip表的关联,Vip与User的关系是一对多
+        '''用户的配置项'''
+        if not hasattr(self, '_vip'):  # '_vip'是否在self的属性中
+            self._vip = Vip.objects.get(id=self.vip_id)  # 直接把结果放到对象
+        return self._vip
+
 
 class Profile(models.Model):
     '''用户配置项'''
@@ -77,4 +87,5 @@ class Profile(models.Model):
         'max_distance': self.max_distance,
         'min_dating_age': self.min_dating_age,
         'max_dating_age': self.max_dating_age,
+
     }
