@@ -18,7 +18,6 @@ def get_verify_code(request):
     res = send_verify_code(phonenum)
     return render_json(res)
 
-
 def login(request):
     '''短信验证登录'''
     phonenum = request.GET.get('phonenum')

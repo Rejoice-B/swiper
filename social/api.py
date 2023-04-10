@@ -3,7 +3,9 @@ from lib.http import render_json
 from social import logic
 from user.models import User
 from social.models import Swiped
+from vip.logic import need_perm
 # Create your views here.
+
 def get_rcmd_users(request):
     '''获取推荐列表'''
     user = request.user
@@ -21,6 +23,7 @@ def like(request):
     is_matched = logic.like_someone(request.user,sid) # 检查两个人是否已经完成了匹配
     return render_json({'is_matched':is_matched})
 
+@need_perm('superlike')
 def superlike(request):
     '''超级喜欢'''
     sid = int(request.POST.get('sid'))
@@ -33,11 +36,13 @@ def dislike(request):
     Swiped.dislike(request.user.id,sid)
     return render_json(None)
 
+@need_perm('rewind')
 def rewind(request):
     '''反悔'''
     logic.rewind(request.user)
     return render_json(None)
 
+@need_perm('show_liked_me')
 def show_liked_me(request):
     '''查看喜欢过我的人'''
     users = logic.user_liked_me(request.user)

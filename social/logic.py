@@ -36,7 +36,7 @@ def rewind(user):
     swiped = Swiped.objects.filter(uid=user.id).latest()
     # 删除好友关系
     if swiped.flag in ['superlike','like']:
-        Friend.break_off(user.id,swiper.sid) # 如果有好友关系就删除，否则不操作
+        Friend.break_off(user.id,swiped.sid) # 如果有好友关系就删除，否则不操作
     # 删除滑动记录
     swiped.delete()
 

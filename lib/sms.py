@@ -5,15 +5,16 @@ from django.core.cache import cache
 
 from swiper import config
 from worker import call_by_worker
-from worker import celery_app
+#from worker import celery_app
 
 from common.errors import VcodeExist
 def gen_verify_code(length=6):
     '''产生一个验证码'''
     return random.randrange(10 ** (length-1),10 ** length)
 
-#@call_by_worker
-#@celery_app.task
+import time
+
+@call_by_worker
 def send_sms(phonenum, msg):
     '''发送短信'''
     params = config.HY_SMS_PARAMS.copy()

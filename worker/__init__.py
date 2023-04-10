@@ -1,8 +1,8 @@
 import os
 from celery import Celery
-
+from worker import config
 #设置环境变量，加载 Django 的 settings
-os.environ.setdefault('DIANGO_SETTINGS_MODULE','swiper.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE','swiper.settings')
 
 #创建 Celery Application
 celery_app = Celery('swiper')
