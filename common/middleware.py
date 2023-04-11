@@ -1,8 +1,12 @@
+import logging
+err_logger = logging.getLogger('err')
+
 from django.utils.deprecation import MiddlewareMixin
 
 from common import errors
 from lib.http import render_json
 from user.models import User
+
 class AuthMiddleware(MiddlewareMixin):
     white_list = [
         '/api/user/vcode/',
@@ -31,6 +35,7 @@ class LogicErrorMiddleware(MiddlewareMixin):
     def process_exception(self,request,exception):
         '''异常处理'''
         if isinstance(exception, errors.LogicError): # 判断抛出的异常类型是否是errors.LogicError,这里的exception是异常产生的一个实例
+            err_logger.error(f'LogicError: {exception}')
             return render_json(None,exception.code) # 处理逻辑错误
         # else:
         #     #处理程序错误

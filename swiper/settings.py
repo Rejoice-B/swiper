@@ -128,3 +128,60 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = 'medias'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    #格式配置
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(module)s.%(funcName)s: %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'verbose': { # verbose一般记录错误信息，精确到行
+            'format': ('%(asctime)s %(levelname)s [%(process)d-%(threadName)s] '
+                      '%(module)s.%(funcName)s line %(lineno)d: %(message)s'),
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        }
+    },
+
+    # Handler配置
+    'handlers': {
+        'console': { # 标准输出
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG' if DEBUG else 'WARNING'
+        },
+        'info': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'{BASE_DIR}/logs/info.log', # ⽇志保存路径
+            'when': 'D', # 每天切割⽇志
+            'backupCount': 30, # ⽇志保留30天
+            'formatter': 'simple',
+            'level': 'INFO',
+        },
+        'error': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'{BASE_DIR}/logs/error.log', # ⽇志保存路径
+            'when': 'W0', # 每周⼀切割⽇志
+            'backupCount': 4, # ⽇志保留4周
+            'formatter': 'verbose',
+            'level': 'WARNING',
+        }
+    },
+    # Logger配置
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+        },
+        'inf': {
+            'handlers': ['info'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'err': {
+            'handlers': ['error'],
+            'propagate': True,
+            'level': 'WARNING',
+        }
+    }
+}
